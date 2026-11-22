@@ -1,0 +1,56 @@
+---
+title: Mithril Fund API endpoint
+description: Use the Mithril Fund API as an Anthropic Messages or OpenAI-compatible endpoint from Orca-launched agents.
+---
+
+import { Callout } from '@/components/docs/prose'
+
+The Mithril Fund API is registered in Orca as a built-in inference endpoint preset for agents and bots that already use Mithril access.
+
+- **Base URL:** `https://api.mithril.fund/v1`
+- **Anthropic-compatible:** `POST /v1/messages`
+- **OpenAI-compatible:** `/v1` paths such as chat completions, depending on the agent harness
+
+<Callout title="Credential boundary">
+  Orca does not ship a Mithril token and does not include shared credentials. Use only the token or
+  helper that belongs to the bot owner.
+</Callout>
+
+## Claude Code
+
+Claude Code reads endpoint overrides from its settings environment. For a bot-specific Claude home, put the base URL in that bot's `.claude/settings.local.json` and keep credentials in the owner's existing token helper or private environment.
+
+```json
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.mithril.fund/v1"
+  }
+}
+```
+
+Restart Claude Code sessions in Orca so the new environment is loaded, then run `/status` in Claude Code to confirm the endpoint and model selection.
+
+## OpenAI-compatible harnesses
+
+For Codex, OpenCode, Cline, Kilo Code, Roo Code, Droid, OpenClaw, or another harness with an OpenAI-compatible provider setting, choose the custom or OpenAI-compatible provider and set its base URL to:
+
+```text
+https://api.mithril.fund/v1
+```
+
+Use a model name that the Mithril Fund API has made available to that owner. Do not paste tokens into repository files, bot packages, or shared docs.
+
+For Codex, an explicit provider entry in `~/.codex/config.toml` uses the same base URL and the owner's own environment variable for the key:
+
+```toml
+[model_providers.mithril-fund]
+name = "Mithril Fund API"
+base_url = "https://api.mithril.fund/v1"
+env_key = "MITHRIL_API_KEY"
+```
+
+Orca mirrors Codex settings from the real home into managed accounts, so this entry works for Orca-launched Codex sessions as it does for a terminal `codex`.
+
+## Source
+
+The `/v1/messages` Anthropic-compatible endpoint was deployed for `mithril-lang/mithril-fund` in PR #3020 at commit `ff0a7ad4` on 2026-11-22. Orca records only the public base URL and compatibility class.
